@@ -16,6 +16,41 @@ import { formatCurrencyCompact } from "@/lib/utils";
 
 const MES_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
+// Reconstrói o histórico mês a mês a partir dos dados de cada profissional.
+// Para cada mês entre o início do mais antigo e o mês atual,
+// soma o valorMensal dos profissionais que já estavam ativos naquele período.
+function buildHistorico(alocados: Allocation[]) {
+  if (alocados.length === 0) return [];
+
+  const now = new Date();
+  const nowIndex = now.getFullYear() * 12 + now.getMonth();
+
+  const startIndexes = alocados.map((a) => nowIndex - a.mesesAlocado);
+  const earliestIndex = Math.min(...startIndexes);
+
+  const result = [];
+
+  for (let idx = earliestIndex; idx <= nowIndex; idx++) {
+    const year = Math.floor(idx / 12);
+    const month = idx % 12;
+    const mes = `${MES_NAMES[month]}/${year}`;
+
+    // Profissional estava ativo neste mês se seu início <= idx
+    const active = alocados.filter((a) => nowIndex - a.mesesAlocado <= idx);
+
+    const valorMensal = active.reduce((s, a) => s + a.valorMensal, 0);
+    const qtdAlocados = active.length;
+    const salarioMedio =
+      qtdAlocados > 0
+        ? Math.round(active.reduce((s, a) => s + a.salario, 0) / qtdAlocados)
+        : 0;
+
+    result.push({ mes, valorMensal, qtdAlocados, salarioMedio });
+  }
+
+  return result;
+}
+
 interface Props {
   alocados: Allocation[];
   tipoContrato: ContractType;
@@ -44,21 +79,16 @@ export function GestorDataSection({
     ? alocados.filter((a) => a.gestor === selectedGestor)
     : [];
 
-  const now = new Date();
-  const currentMes = `${MES_NAMES[now.getMonth()]}/${now.getFullYear()}`;
+  const historico = buildHistorico(filtered);
+  const latest = historico[historico.length - 1];
 
-  const totalValorMensal = filtered.reduce((s, a) => s + a.valorMensal, 0);
-  const qtdAlocados = filtered.length;
-  const avgSalario = qtdAlocados > 0
-    ? Math.round(filtered.reduce((s, a) => s + a.salario, 0) / qtdAlocados)
-    : 0;
-  const avgTempo = qtdAlocados > 0
-    ? Math.round(filtered.reduce((s, a) => s + a.mesesAlocado, 0) / qtdAlocados)
-    : 0;
-
-  const historicoPoint = selectedGestor
-    ? [{ mes: currentMes, valorMensal: totalValorMensal, qtdAlocados, salarioMedio: avgSalario }]
-    : [];
+  const totalValorMensal = latest?.valorMensal ?? 0;
+  const qtdAlocados = latest?.qtdAlocados ?? 0;
+  const avgSalario = latest?.salarioMedio ?? 0;
+  const avgTempo =
+    filtered.length > 0
+      ? Math.round(filtered.reduce((s, a) => s + a.mesesAlocado, 0) / filtered.length)
+      : 0;
 
   return (
     <>
@@ -170,14 +200,14 @@ export function GestorDataSection({
               <p className="text-2xl font-light text-white mb-6">
                 {formatCurrencyCompact(totalValorMensal)}
               </p>
-              <AreaValueChart data={historicoPoint} />
+              <AreaValueChart data={historico} />
             </div>
             <div className="glass-card rounded-2xl p-6">
               <p className="section-label mb-1">Profissionais alocados</p>
               <p className="text-2xl font-light text-white mb-6">
                 {qtdAlocados} profissionais
               </p>
-              <BarAllocationChart data={historicoPoint} />
+              <BarAllocationChart data={historico} />
             </div>
           </section>
 
