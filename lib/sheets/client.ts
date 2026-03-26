@@ -38,7 +38,7 @@ async function readSheet(sheetName: string): Promise<string[][]> {
 // Spreadsheet columns (0-indexed):
 // 0: Cliente | 1: Gestor | 2: Tipo de Contrato | 3: Alocado
 // 4: Data de Admissão | 5: Tempo alocado | 6: Salário | 7: Valor Hora | 8: Valor Mensal
-// Each row is one allocated professional.
+// Each row is one allocated professional. Grouped by empresa (slug = slugify(empresa)).
 export async function fetchSheetsData(): Promise<DashboardData> {
   const [managersRows] = await Promise.all([
     readSheet("relatorio gestores"),
@@ -50,8 +50,7 @@ export async function fetchSheetsData(): Promise<DashboardData> {
   const now = new Date();
   const currentMes = `${MES_NAMES[now.getMonth()]}/${now.getFullYear()}`;
 
-  // clientMap stores the client object + a running valorMensal total
-  // Key is "empresa|gestor" to support multiple gestores per company
+  // Group by empresa — each entry has all alocados across all gestores
   const clientMap = new Map<string, { client: any; valorMensalTotal: number }>();
 
   for (const row of rows) {
@@ -59,14 +58,12 @@ export async function fetchSheetsData(): Promise<DashboardData> {
     const gestor = (row[1] ?? "").trim();
     if (!empresa) continue;
 
-    const mapKey = `${empresa}|${gestor}`;
-
-    if (!clientMap.has(mapKey)) {
-      clientMap.set(mapKey, {
+    if (!clientMap.has(empresa)) {
+      clientMap.set(empresa, {
         client: {
-          id: slugify(empresa + " " + gestor),
+          id: slugify(empresa),
           empresa,
-          gestor,
+          gestor: gestor, // primary gestor (first row)
           tipoContrato: parseContractType(row[2] ?? ""),
           detalhesContrato: "",
           inicioContrato: row[4] ?? "",
@@ -83,7 +80,7 @@ export async function fetchSheetsData(): Promise<DashboardData> {
       });
     }
 
-    const entry = clientMap.get(mapKey)!;
+    const entry = clientMap.get(empresa)!;
     const salario = Number((row[6] ?? "0").replace(/[^0-9]/g, ""));
     const valorMensal = Number((row[8] ?? "0").replace(/[^0-9]/g, ""));
     const mesesAlocado = Number((row[5] ?? "0").replace(/[^0-9]/g, ""));
@@ -93,7 +90,9 @@ export async function fetchSheetsData(): Promise<DashboardData> {
       cargo: "",
       senioridade: "Pleno",
       salario,
+      valorMensal,
       mesesAlocado,
+      gestor,
     });
 
     entry.valorMensalTotal += valorMensal;

@@ -7,7 +7,6 @@ import { MonthRangePicker, DateRange } from "./MonthRangePicker";
 interface ClientOption {
   id: string;
   empresa: string;
-  gestor: string;
 }
 
 interface Props {
@@ -57,7 +56,7 @@ export function ClientReportForm({ clientes, onReveal }: Props) {
               className="text-sm font-light"
               style={{ color: selected ? "#fff" : "rgba(255,255,255,0.35)" }}
             >
-              {selected ? `${selected.empresa} · ${selected.gestor}` : "Selecione o cliente"}
+              {selected ? selected.empresa : "Selecione o cliente"}
             </span>
             <ChevronDown
               className="w-4 h-4 transition-transform"
@@ -96,8 +95,7 @@ export function ClientReportForm({ clientes, onReveal }: Props) {
                       c.id === clienteId ? "rgba(255,255,255,0.07)" : "transparent")
                   }
                 >
-                  <span className="block">{c.empresa}</span>
-                  <span className="block text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.35)" }}>{c.gestor}</span>
+                  {c.empresa}
                 </button>
               ))}
             </div>

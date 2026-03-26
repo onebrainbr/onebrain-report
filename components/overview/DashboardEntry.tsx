@@ -13,7 +13,6 @@ import { DateRange } from "./MonthRangePicker";
 interface ClientOption {
   id: string;
   empresa: string;
-  gestor: string;
   tipoContrato: ContractType;
 }
 
@@ -53,7 +52,7 @@ export function DashboardEntry({ clientes }: Props) {
     router.push(`/cliente/${selectedId}?${params.toString()}`);
   }
 
-  const formClientes = clientes.map((c) => ({ id: c.id, empresa: c.empresa, gestor: c.gestor }));
+  const formClientes = clientes.map((c) => ({ id: c.id, empresa: c.empresa }));
 
   return (
     <>
@@ -141,7 +140,7 @@ export function DashboardEntry({ clientes }: Props) {
               <div className="pb-24 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
                 <div>
                   <p className="text-white font-medium mb-1">
-                    {selectedClient?.empresa} · {selectedClient?.gestor} — relatório completo
+                    {selectedClient?.empresa} — relatório completo
                   </p>
                   <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>
                     Dados de alocação, NPS, economia gerada e indicadores de sucesso.

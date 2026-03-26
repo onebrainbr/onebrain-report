@@ -41,7 +41,7 @@ export function AllocationTable({ alocados }: AllocationTableProps) {
             <span className="text-sm text-white/50">{calcAdmissao(a.mesesAlocado)}</span>
             <span className="text-sm text-white/50">{a.mesesAlocado} meses</span>
             <span className="text-xs text-white/70 font-mono text-right">{formatCurrency(a.salario)}</span>
-            <span className="text-xs text-white/70 font-mono text-right">{formatCurrency(a.salario)}</span>
+            <span className="text-xs text-white/70 font-mono text-right">{formatCurrency(a.valorMensal)}</span>
           </div>
         ))}
 

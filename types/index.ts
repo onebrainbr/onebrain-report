@@ -8,7 +8,9 @@ export interface Allocation {
   cargo: string;
   senioridade: "Junior" | "Pleno" | "Senior" | "Especialista";
   salario: number;
+  valorMensal: number;
   mesesAlocado: number;
+  gestor: string;
 }
 
 export interface MonthlyMetric {
