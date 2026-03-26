@@ -16,6 +16,27 @@ import { formatCurrencyCompact } from "@/lib/utils";
 
 const MES_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
+// Converte "Data de Admissão" da planilha para índice de mês (ano * 12 + mês 0-indexed).
+// Suporta os formatos: "DD/MM/YYYY", "D/M/YYYY", "MM/YYYY" e ISO "YYYY-MM-DD".
+// Retorna null se não conseguir parsear.
+function parseAdmissaoIndex(raw: string): number | null {
+  const s = raw.trim();
+
+  // DD/MM/YYYY ou D/M/YYYY
+  const dmy = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (dmy) return Number(dmy[3]) * 12 + (Number(dmy[2]) - 1);
+
+  // MM/YYYY
+  const my = s.match(/^(\d{1,2})\/(\d{4})$/);
+  if (my) return Number(my[2]) * 12 + (Number(my[1]) - 1);
+
+  // ISO YYYY-MM-DD
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return Number(iso[1]) * 12 + (Number(iso[2]) - 1);
+
+  return null;
+}
+
 // Reconstrói o histórico mês a mês a partir dos dados de cada profissional.
 // Para cada mês entre o início do mais antigo e o mês atual,
 // soma o valorMensal dos profissionais que já estavam ativos naquele período.
@@ -25,7 +46,11 @@ function buildHistorico(alocados: Allocation[]) {
   const now = new Date();
   const nowIndex = now.getFullYear() * 12 + now.getMonth();
 
-  const startIndexes = alocados.map((a) => nowIndex - a.mesesAlocado);
+  // Usa dataAdmissao se disponível; cai de volta em mesesAlocado
+  const getStartIndex = (a: Allocation) =>
+    parseAdmissaoIndex(a.dataAdmissao) ?? nowIndex - a.mesesAlocado;
+
+  const startIndexes = alocados.map(getStartIndex);
   const earliestIndex = Math.min(...startIndexes);
 
   const result = [];
@@ -35,8 +60,7 @@ function buildHistorico(alocados: Allocation[]) {
     const month = idx % 12;
     const mes = `${MES_NAMES[month]}/${year}`;
 
-    // Profissional estava ativo neste mês se seu início <= idx
-    const active = alocados.filter((a) => nowIndex - a.mesesAlocado <= idx);
+    const active = alocados.filter((a) => getStartIndex(a) <= idx);
 
     const valorMensal = active.reduce((s, a) => s + a.valorMensal, 0);
     const qtdAlocados = active.length;

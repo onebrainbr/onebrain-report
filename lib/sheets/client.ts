@@ -105,6 +105,7 @@ export async function fetchSheetsData(): Promise<DashboardData> {
       salario,
       valorMensal,
       mesesAlocado,
+      dataAdmissao: row[4] ?? "",
       gestor,
     });
 

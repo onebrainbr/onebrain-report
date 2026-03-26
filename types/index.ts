@@ -10,6 +10,7 @@ export interface Allocation {
   salario: number;
   valorMensal: number;
   mesesAlocado: number;
+  dataAdmissao: string; // raw value from spreadsheet, e.g. "01/10/2025"
   gestor: string;
 }
 
