@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { ChevronDown, Users, DollarSign, TrendingUp, Clock } from "lucide-react";
-import { Allocation, NPSEntry, ManagerNPS } from "@/types";
+import { Allocation, NPSEntry, ManagerNPS, ContractType } from "@/types";
+import { ContractDetails } from "@/components/client/ContractDetails";
 import { KPICard } from "@/components/ui/KPICard";
 import { AllocationTable } from "@/components/client/AllocationTable";
 import { AreaValueChart } from "@/components/charts/AreaValueChart";
@@ -17,6 +18,7 @@ const MES_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set"
 
 interface Props {
   alocados: Allocation[];
+  tipoContrato: ContractType;
   npsHistorico: NPSEntry[];
   npsGestores: ManagerNPS[];
   scoreAtual: number;
@@ -26,6 +28,7 @@ interface Props {
 
 export function GestorDataSection({
   alocados,
+  tipoContrato,
   npsHistorico,
   npsGestores,
   scoreAtual,
@@ -120,6 +123,8 @@ export function GestorDataSection({
           )}
         </div>
       </section>
+
+      <ContractDetails tipoContrato={tipoContrato} />
 
       {/* Data — shown after gestor is selected */}
       {selectedGestor && (

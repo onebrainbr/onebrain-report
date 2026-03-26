@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ClientHeader } from "@/components/client/ClientHeader";
-import { ContractDetails } from "@/components/client/ContractDetails";
 import { GestorDataSection } from "@/components/client/GestorDataSection";
 import { getClientById, getAllClients } from "@/lib/data";
 
@@ -32,10 +31,9 @@ export default async function ClientePage({ params, searchParams }: PageProps) {
 
         <ClientHeader client={cliente} />
 
-        <ContractDetails tipoContrato={cliente.tipoContrato} />
-
         <GestorDataSection
           alocados={cliente.alocados}
+          tipoContrato={cliente.tipoContrato}
           npsHistorico={cliente.npsHistorico}
           npsGestores={cliente.npsGestores}
           scoreAtual={cliente.scoreAtual}
