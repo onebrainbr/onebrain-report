@@ -12,12 +12,12 @@ export const mockData: DashboardData = {
         "Squad dedicado de engenharia com 6 profissionais. SLA de 48h para onboarding de novos perfis. Revisão trimestral de composição.",
       inicioContrato: "Jun/2025",
       alocados: [
-        { nome: "Rafael Moura", cargo: "Tech Lead", senioridade: "Senior", salario: 22000, mesesAlocado: 9 },
-        { nome: "Camila Souza", cargo: "Backend Engineer", senioridade: "Pleno", salario: 14000, mesesAlocado: 9 },
-        { nome: "Lucas Prado", cargo: "Frontend Engineer", senioridade: "Pleno", salario: 13500, mesesAlocado: 7 },
-        { nome: "Beatriz Lima", cargo: "Data Engineer", senioridade: "Senior", salario: 18000, mesesAlocado: 9 },
-        { nome: "Diego Neves", cargo: "DevOps Engineer", senioridade: "Senior", salario: 20000, mesesAlocado: 6 },
-        { nome: "Mariana Faria", cargo: "QA Engineer", senioridade: "Pleno", salario: 11000, mesesAlocado: 4 },
+        { nome: "Rafael Moura", cargo: "Tech Lead", senioridade: "Senior", salario: 22000, valorMensal: 28000, mesesAlocado: 9, gestor: "Ana Carvalho" },
+        { nome: "Camila Souza", cargo: "Backend Engineer", senioridade: "Pleno", salario: 14000, valorMensal: 18000, mesesAlocado: 9, gestor: "Ana Carvalho" },
+        { nome: "Lucas Prado", cargo: "Frontend Engineer", senioridade: "Pleno", salario: 13500, valorMensal: 17000, mesesAlocado: 7, gestor: "Pedro Alves" },
+        { nome: "Beatriz Lima", cargo: "Data Engineer", senioridade: "Senior", salario: 18000, valorMensal: 23000, mesesAlocado: 9, gestor: "Pedro Alves" },
+        { nome: "Diego Neves", cargo: "DevOps Engineer", senioridade: "Senior", salario: 20000, valorMensal: 25000, mesesAlocado: 6, gestor: "Ana Carvalho" },
+        { nome: "Mariana Faria", cargo: "QA Engineer", senioridade: "Pleno", salario: 11000, valorMensal: 14000, mesesAlocado: 4, gestor: "Pedro Alves" },
       ],
       historico: [
         { mes: "Jun/2025", valorMensal: 58000, qtdAlocados: 3, salarioMedio: 16000 },
@@ -82,10 +82,10 @@ export const mockData: DashboardData = {
         "Outsourcing de time de produto com revisão mensal de composição. Cobertura de férias e afastamentos incluída no contrato.",
       inicioContrato: "Ago/2025",
       alocados: [
-        { nome: "Thiago Ramos", cargo: "Product Manager", senioridade: "Senior", salario: 19000, mesesAlocado: 7 },
-        { nome: "Fernanda Costa", cargo: "UX Designer", senioridade: "Pleno", salario: 13000, mesesAlocado: 7 },
-        { nome: "André Martins", cargo: "Backend Engineer", senioridade: "Senior", salario: 17000, mesesAlocado: 5 },
-        { nome: "Sofia Torres", cargo: "Mobile Engineer", senioridade: "Pleno", salario: 14000, mesesAlocado: 4 },
+        { nome: "Thiago Ramos", cargo: "Product Manager", senioridade: "Senior", salario: 19000, valorMensal: 24000, mesesAlocado: 7, gestor: "Carlos Oliveira" },
+        { nome: "Fernanda Costa", cargo: "UX Designer", senioridade: "Pleno", salario: 13000, valorMensal: 16000, mesesAlocado: 7, gestor: "Carlos Oliveira" },
+        { nome: "André Martins", cargo: "Backend Engineer", senioridade: "Senior", salario: 17000, valorMensal: 21000, mesesAlocado: 5, gestor: "Renata Silva" },
+        { nome: "Sofia Torres", cargo: "Mobile Engineer", senioridade: "Pleno", salario: 14000, valorMensal: 17000, mesesAlocado: 4, gestor: "Renata Silva" },
       ],
       historico: [
         { mes: "Ago/2025", valorMensal: 40000, qtdAlocados: 2, salarioMedio: 16000 },
@@ -141,8 +141,8 @@ export const mockData: DashboardData = {
         "Hunting de posições específicas de alta senioridade. Fee de sucesso por posição fechada. Sem custo de manutenção mensal.",
       inicioContrato: "Set/2025",
       alocados: [
-        { nome: "Ricardo Gomes", cargo: "Head of Engineering", senioridade: "Especialista", salario: 35000, mesesAlocado: 6 },
-        { nome: "Priya Sharma", cargo: "Staff Engineer", senioridade: "Especialista", salario: 28000, mesesAlocado: 4 },
+        { nome: "Ricardo Gomes", cargo: "Head of Engineering", senioridade: "Especialista", salario: 35000, valorMensal: 42000, mesesAlocado: 6, gestor: "Juliana Melo" },
+        { nome: "Priya Sharma", cargo: "Staff Engineer", senioridade: "Especialista", salario: 28000, valorMensal: 34000, mesesAlocado: 4, gestor: "Juliana Melo" },
       ],
       historico: [
         { mes: "Set/2025", valorMensal: 35000, qtdAlocados: 1, salarioMedio: 35000 },
