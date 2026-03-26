@@ -1,6 +1,16 @@
 import { google } from "googleapis";
-import { DashboardData } from "@/types";
+import { DashboardData, ContractType } from "@/types";
 import { slugify } from "@/lib/utils";
+
+const CONTRACT_TYPE_MAP: Record<string, ContractType> = {
+  "essentials": "ESSENTIALS",
+  "squad": "SQUAD",
+  "talent pipeline pro": "TALENT_PIPELINE_PRO",
+};
+
+function parseContractType(raw: string): ContractType {
+  return CONTRACT_TYPE_MAP[raw.toLowerCase().trim()] ?? "ESSENTIALS";
+}
 
 const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID!;
 
@@ -25,56 +35,84 @@ async function readSheet(sheetName: string): Promise<string[][]> {
   return (response.data.values as string[][]) ?? [];
 }
 
-// Transform raw sheet rows into DashboardData
-// Column mapping is based on the actual spreadsheet structure.
-// Update the indices below if the sheet columns change.
+// Spreadsheet columns (0-indexed):
+// 0: Cliente | 1: Gestor | 2: Tipo de Contrato | 3: Alocado
+// 4: Data de Admissão | 5: Tempo alocado | 6: Salário | 7: Valor Hora | 8: Valor Mensal
+// Each row is one allocated professional.
 export async function fetchSheetsData(): Promise<DashboardData> {
   const [managersRows] = await Promise.all([
     readSheet("relatorio gestores"),
-    // readSheet("NPS clientes"), // uncomment when ready
   ]);
 
-  // Skip header row
-  const rows = managersRows.slice(1);
+  const rows = managersRows.slice(1); // skip header
 
-  // Group by empresa
-  const clientMap = new Map<string, any>();
+  const MES_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  const now = new Date();
+  const currentMes = `${MES_NAMES[now.getMonth()]}/${now.getFullYear()}`;
+
+  // clientMap stores the client object + a running valorMensal total
+  const clientMap = new Map<string, { client: any; valorMensalTotal: number }>();
 
   for (const row of rows) {
-    const empresa = row[0] ?? "";
+    const empresa = (row[0] ?? "").trim();
     if (!empresa) continue;
 
     if (!clientMap.has(empresa)) {
       clientMap.set(empresa, {
-        id: slugify(empresa),
-        empresa,
-        gestor: row[1] ?? "",
-        tipoContrato: row[2] ?? "OUTSOURCING",
-        detalhesContrato: row[3] ?? "",
-        inicioContrato: row[4] ?? "",
-        alocados: [],
-        historico: [],
-        npsHistorico: [],
-        npsGestores: [],
-        scoreAtual: Number(row[5] ?? 0),
-        economiaGerada: [],
-        indicadoresSucesso: [],
-        oportunidadeExpansao: row[6] ?? "",
+        client: {
+          id: slugify(empresa),
+          empresa,
+          gestor: row[1] ?? "",
+          tipoContrato: parseContractType(row[2] ?? ""),
+          detalhesContrato: "",
+          inicioContrato: row[4] ?? "",
+          alocados: [],
+          historico: [],
+          npsHistorico: [],
+          npsGestores: [],
+          scoreAtual: 0,
+          economiaGerada: [],
+          indicadoresSucesso: [],
+          oportunidadeExpansao: "",
+        },
+        valorMensalTotal: 0,
       });
     }
 
-    // Each row is a monthly entry
-    const entry = clientMap.get(empresa);
-    entry.historico.push({
-      mes: row[7] ?? "",
-      valorMensal: Number((row[8] ?? "0").replace(/[^0-9]/g, "")),
-      qtdAlocados: Number(row[9] ?? 0),
-      salarioMedio: Number((row[10] ?? "0").replace(/[^0-9]/g, "")),
+    const entry = clientMap.get(empresa)!;
+    const salario = Number((row[6] ?? "0").replace(/[^0-9]/g, ""));
+    const valorMensal = Number((row[8] ?? "0").replace(/[^0-9]/g, ""));
+    const mesesAlocado = Number((row[5] ?? "0").replace(/[^0-9]/g, ""));
+
+    entry.client.alocados.push({
+      nome: row[3] ?? "",
+      cargo: "",
+      senioridade: "Pleno",
+      salario,
+      mesesAlocado,
     });
+
+    entry.valorMensalTotal += valorMensal;
   }
 
+  const clientes = Array.from(clientMap.values()).map(({ client, valorMensalTotal }) => {
+    const qtdAlocados = client.alocados.length;
+    const salarioMedio = qtdAlocados > 0
+      ? Math.round(client.alocados.reduce((s: number, a: any) => s + a.salario, 0) / qtdAlocados)
+      : 0;
+
+    client.historico = [{
+      mes: currentMes,
+      valorMensal: valorMensalTotal,
+      qtdAlocados,
+      salarioMedio,
+    }];
+
+    return client;
+  });
+
   return {
-    ultimaAtualizacao: new Date().toISOString(),
-    clientes: Array.from(clientMap.values()),
+    ultimaAtualizacao: now.toISOString(),
+    clientes,
   };
 }
