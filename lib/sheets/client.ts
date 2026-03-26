@@ -51,18 +51,22 @@ export async function fetchSheetsData(): Promise<DashboardData> {
   const currentMes = `${MES_NAMES[now.getMonth()]}/${now.getFullYear()}`;
 
   // clientMap stores the client object + a running valorMensal total
+  // Key is "empresa|gestor" to support multiple gestores per company
   const clientMap = new Map<string, { client: any; valorMensalTotal: number }>();
 
   for (const row of rows) {
     const empresa = (row[0] ?? "").trim();
+    const gestor = (row[1] ?? "").trim();
     if (!empresa) continue;
 
-    if (!clientMap.has(empresa)) {
-      clientMap.set(empresa, {
+    const mapKey = `${empresa}|${gestor}`;
+
+    if (!clientMap.has(mapKey)) {
+      clientMap.set(mapKey, {
         client: {
-          id: slugify(empresa),
+          id: slugify(empresa + " " + gestor),
           empresa,
-          gestor: row[1] ?? "",
+          gestor,
           tipoContrato: parseContractType(row[2] ?? ""),
           detalhesContrato: "",
           inicioContrato: row[4] ?? "",
@@ -79,7 +83,7 @@ export async function fetchSheetsData(): Promise<DashboardData> {
       });
     }
 
-    const entry = clientMap.get(empresa)!;
+    const entry = clientMap.get(mapKey)!;
     const salario = Number((row[6] ?? "0").replace(/[^0-9]/g, ""));
     const valorMensal = Number((row[8] ?? "0").replace(/[^0-9]/g, ""));
     const mesesAlocado = Number((row[5] ?? "0").replace(/[^0-9]/g, ""));

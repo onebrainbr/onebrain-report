@@ -10,6 +10,7 @@ export default async function HomePage() {
   const clientOptions = clientes.map((c) => ({
     id: c.id,
     empresa: c.empresa,
+    gestor: c.gestor,
     tipoContrato: c.tipoContrato,
   }));
 
