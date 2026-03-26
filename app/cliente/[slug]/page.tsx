@@ -39,6 +39,8 @@ export default async function ClientePage({ params, searchParams }: PageProps) {
           scoreAtual={cliente.scoreAtual}
           empresa={cliente.empresa}
           oportunidadeExpansao={cliente.oportunidadeExpansao}
+          from={from}
+          to={to}
         />
 
       </main>

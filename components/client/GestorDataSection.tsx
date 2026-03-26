@@ -37,29 +37,43 @@ function parseAdmissaoIndex(raw: string): number | null {
   return null;
 }
 
-// Reconstrói o histórico mês a mês a partir dos dados de cada profissional.
-// Para cada mês entre o início do mais antigo e o mês atual,
-// soma o valorMensal dos profissionais que já estavam ativos naquele período.
-function buildHistorico(alocados: Allocation[]) {
+// Converte "YYYY-MM-DD" (formato dos searchParams) para índice de mês.
+function parseParamIndex(s: string | undefined): number | null {
+  if (!s) return null;
+  const m = s.match(/^(\d{4})-(\d{2})/);
+  if (!m) return null;
+  return Number(m[1]) * 12 + (Number(m[2]) - 1);
+}
+
+// Reconstrói o histórico mês a mês dentro do período selecionado.
+// Para cada mês no intervalo [fromIndex, toIndex], soma o valorMensal
+// dos profissionais que já estavam ativos naquele mês.
+function buildHistorico(
+  alocados: Allocation[],
+  fromIndex: number | null,
+  toIndex: number | null
+) {
   if (alocados.length === 0) return [];
 
   const now = new Date();
   const nowIndex = now.getFullYear() * 12 + now.getMonth();
+  const endIndex = toIndex ?? nowIndex;
 
-  // Usa dataAdmissao se disponível; cai de volta em mesesAlocado
   const getStartIndex = (a: Allocation) =>
     parseAdmissaoIndex(a.dataAdmissao) ?? nowIndex - a.mesesAlocado;
 
   const startIndexes = alocados.map(getStartIndex);
-  const earliestIndex = Math.min(...startIndexes);
+  const earliestPossible = Math.min(...startIndexes);
+  const loopStart = fromIndex != null ? Math.max(earliestPossible, fromIndex) : earliestPossible;
 
   const result = [];
 
-  for (let idx = earliestIndex; idx <= nowIndex; idx++) {
+  for (let idx = loopStart; idx <= endIndex; idx++) {
     const year = Math.floor(idx / 12);
     const month = idx % 12;
     const mes = `${MES_NAMES[month]}/${year}`;
 
+    // Ativo neste mês: admitido em ou antes de idx
     const active = alocados.filter((a) => getStartIndex(a) <= idx);
 
     const valorMensal = active.reduce((s, a) => s + a.valorMensal, 0);
@@ -83,6 +97,8 @@ interface Props {
   scoreAtual: number;
   empresa: string;
   oportunidadeExpansao: string;
+  from?: string;
+  to?: string;
 }
 
 export function GestorDataSection({
@@ -93,17 +109,32 @@ export function GestorDataSection({
   scoreAtual,
   empresa,
   oportunidadeExpansao,
+  from,
+  to,
 }: Props) {
   const [selectedGestor, setSelectedGestor] = useState<string | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const gestores = [...new Set(alocados.map((a) => a.gestor).filter(Boolean))];
 
-  const filtered = selectedGestor
+  const now = new Date();
+  const nowIndex = now.getFullYear() * 12 + now.getMonth();
+  const fromIndex = parseParamIndex(from);
+  const toIndex = parseParamIndex(to);
+
+  const getStartIndex = (a: Allocation) =>
+    parseAdmissaoIndex(a.dataAdmissao) ?? nowIndex - a.mesesAlocado;
+
+  // Profissionais do gestor que entraram dentro do período (admissão <= to)
+  const byGestor = selectedGestor
     ? alocados.filter((a) => a.gestor === selectedGestor)
     : [];
 
-  const historico = buildHistorico(filtered);
+  const filtered = byGestor.filter((a) =>
+    toIndex == null || getStartIndex(a) <= toIndex
+  );
+
+  const historico = buildHistorico(filtered, fromIndex, toIndex);
   const latest = historico[historico.length - 1];
 
   const totalValorMensal = latest?.valorMensal ?? 0;
