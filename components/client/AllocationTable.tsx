@@ -37,7 +37,7 @@ function formatAdmissao(dataAdmissao: string): string {
 const COL = "grid-cols-[2fr_1.4fr_1.2fr_1.4fr_1.4fr]";
 
 export function AllocationTable({ alocados }: AllocationTableProps) {
-  const total = alocados.reduce((s, a) => s + a.salario, 0);
+  const total = alocados.reduce((s, a) => s + a.valorMensal, 0);
 
   return (
     <div className="overflow-x-auto">
