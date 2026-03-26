@@ -7,10 +7,31 @@ interface AllocationTableProps {
   alocados: Allocation[];
 }
 
-function calcAdmissao(mesesAlocado: number): string {
-  const d = new Date();
-  d.setMonth(d.getMonth() - mesesAlocado);
-  return d.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
+function formatAdmissao(dataAdmissao: string): string {
+  const s = dataAdmissao.trim();
+
+  // DD/MM/YYYY ou D/M/YYYY
+  const dmy = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (dmy) {
+    const d = new Date(Number(dmy[3]), Number(dmy[2]) - 1, 1);
+    return d.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
+  }
+
+  // MM/YYYY
+  const my = s.match(/^(\d{1,2})\/(\d{4})$/);
+  if (my) {
+    const d = new Date(Number(my[2]), Number(my[1]) - 1, 1);
+    return d.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
+  }
+
+  // ISO YYYY-MM-DD
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) {
+    const d = new Date(Number(iso[1]), Number(iso[2]) - 1, 1);
+    return d.toLocaleDateString("pt-BR", { month: "short", year: "numeric" });
+  }
+
+  return dataAdmissao; // fallback: exibe o valor bruto
 }
 
 const COL = "grid-cols-[2fr_1.4fr_1.2fr_1.4fr_1.4fr]";
@@ -38,7 +59,7 @@ export function AllocationTable({ alocados }: AllocationTableProps) {
             className={`grid ${COL} py-3.5 border-b border-white/4 hover:bg-white/[0.03] transition-colors`}
           >
             <span className="text-sm text-white font-medium truncate pr-4">{a.nome}</span>
-            <span className="text-sm text-white/50">{calcAdmissao(a.mesesAlocado)}</span>
+            <span className="text-sm text-white/50">{formatAdmissao(a.dataAdmissao)}</span>
             <span className="text-sm text-white/50">{a.mesesAlocado} meses</span>
             <span className="text-xs text-white/70 font-mono text-right">{formatCurrency(a.salario)}</span>
             <span className="text-xs text-white/70 font-mono text-right">{formatCurrency(a.valorMensal)}</span>
