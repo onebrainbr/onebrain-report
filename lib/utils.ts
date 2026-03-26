@@ -19,7 +19,7 @@ export function formatCurrencyCompact(value: number): string {
     return `R$ ${(value / 1_000_000).toFixed(1)}M`;
   }
   if (value >= 1_000) {
-    return `R$ ${(value / 1_000).toFixed(0)}k`;
+    return `R$ ${(value / 1_000).toFixed(1)}K`;
   }
   return formatCurrency(value);
 }
