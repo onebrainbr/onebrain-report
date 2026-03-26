@@ -12,6 +12,19 @@ function parseContractType(raw: string): ContractType {
   return CONTRACT_TYPE_MAP[raw.toLowerCase().trim()] ?? "ESSENTIALS";
 }
 
+// Parses Brazilian currency format: "R$ 128.860,00" → 128860
+function parseBRL(raw: string): number {
+  return (
+    Number(
+      raw
+        .replace(/R\$\s*/g, "")  // remove "R$"
+        .replace(/\./g, "")       // remove thousands separator (period)
+        .replace(",", ".")        // decimal comma → period
+        .trim()
+    ) || 0
+  );
+}
+
 const SPREADSHEET_ID = process.env.GOOGLE_SPREADSHEET_ID!;
 
 async function getAuthClient() {
@@ -81,8 +94,8 @@ export async function fetchSheetsData(): Promise<DashboardData> {
     }
 
     const entry = clientMap.get(empresa)!;
-    const salario = Number((row[6] ?? "0").replace(/[^0-9]/g, ""));
-    const valorMensal = Number((row[8] ?? "0").replace(/[^0-9]/g, ""));
+    const salario = parseBRL(row[6] ?? "0");
+    const valorMensal = parseBRL(row[8] ?? "0");
     const mesesAlocado = Number((row[5] ?? "0").replace(/[^0-9]/g, ""));
 
     entry.client.alocados.push({
