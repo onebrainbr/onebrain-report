@@ -1,6 +1,7 @@
 "use client";
 
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useState } from "react";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 interface NPSPieChartProps {
   notasCounts: Record<string, number>;
@@ -25,22 +26,8 @@ const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: an
   );
 };
 
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    const { nota, value } = payload[0].payload;
-    return (
-      <div className="glass-card rounded-xl p-3 text-xs">
-        <p className="text-white/50 mb-1">Nota {nota}</p>
-        <p className="font-semibold" style={{ color: colorForNota(nota) }}>
-          {value} {value === 1 ? "alocado" : "alocados"}
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
-
 export function NPSPieChart({ notasCounts }: NPSPieChartProps) {
+  const [hovered, setHovered] = useState<{ nota: number; value: number } | null>(null);
   const total = Object.values(notasCounts).reduce((s, v) => s + v, 0) || 1;
 
   const chartData = Array.from({ length: 11 }, (_, i) => i)
@@ -52,25 +39,47 @@ export function NPSPieChart({ notasCounts }: NPSPieChartProps) {
     }));
 
   return (
-    <ResponsiveContainer width="100%" height={220}>
-      <PieChart>
-        <Pie
-          data={chartData}
-          cx="50%"
-          cy="50%"
-          innerRadius={60}
-          outerRadius={90}
-          paddingAngle={2}
-          dataKey="value"
-          labelLine={false}
-          label={<CustomLabel />}
-        >
-          {chartData.map((entry) => (
-            <Cell key={entry.nota} fill={colorForNota(entry.nota)} />
-          ))}
-        </Pie>
-        <Tooltip content={<CustomTooltip />} />
-      </PieChart>
-    </ResponsiveContainer>
+    <div className="flex flex-col gap-3">
+      <ResponsiveContainer width="100%" height={200}>
+        <PieChart>
+          <Pie
+            data={chartData}
+            cx="50%"
+            cy="50%"
+            innerRadius={58}
+            outerRadius={88}
+            paddingAngle={2}
+            dataKey="value"
+            labelLine={false}
+            label={<CustomLabel />}
+            onMouseEnter={(data) => setHovered({ nota: data.nota, value: data.value })}
+            onMouseLeave={() => setHovered(null)}
+          >
+            {chartData.map((entry) => (
+              <Cell
+                key={entry.nota}
+                fill={colorForNota(entry.nota)}
+                opacity={hovered && hovered.nota !== entry.nota ? 0.4 : 1}
+                style={{ cursor: "pointer", transition: "opacity 0.15s" }}
+              />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+
+      <div className="h-8 flex items-center justify-center">
+        {hovered ? (
+          <div className="glass-card rounded-xl px-4 py-2 text-xs flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: colorForNota(hovered.nota) }} />
+            <span className="text-white/50">Nota {hovered.nota}:</span>
+            <span className="font-semibold text-white">
+              {hovered.value} {hovered.value === 1 ? "alocado" : "alocados"}
+            </span>
+          </div>
+        ) : (
+          <p className="text-xs" style={{ color: "rgba(255,255,255,0.25)" }}>Passe o mouse sobre uma fatia</p>
+        )}
+      </div>
+    </div>
   );
 }
