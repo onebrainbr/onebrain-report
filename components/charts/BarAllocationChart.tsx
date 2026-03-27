@@ -21,7 +21,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="glass-card rounded-xl p-3 text-xs">
         <p className="text-white/50 mb-1">{label}</p>
-        <p className="text-white font-medium">{payload[0].value} profissionais</p>
+        <p className="text-white font-medium">{payload[0].value} {payload[0].value === 1 ? "profissional" : "profissionais"}</p>
       </div>
     );
   }
