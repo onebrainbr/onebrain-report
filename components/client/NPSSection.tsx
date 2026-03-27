@@ -3,26 +3,31 @@ import { NPSLineChart } from "@/components/charts/NPSLineChart";
 import { NPSPieChart } from "@/components/charts/NPSPieChart";
 import { NPSClassificacaoChart } from "@/components/charts/NPSClassificacaoChart";
 
-function getZoneInfo(score: number): { color: string; descricao: string } {
+function getZoneInfo(score: number): { color: string; zona: string; descricao: string } {
   if (score >= 91) return {
     color: "#3B82F6",
-    descricao: "Zona de Encantamento: alocados altamente satisfeitos e engajados, com forte potencial de indicação e expansão do contrato.",
+    zona: "Zona de Encantamento",
+    descricao: "alocados altamente satisfeitos e engajados, com forte potencial de indicação e expansão do contrato.",
   };
   if (score >= 76) return {
     color: "#22C55E",
-    descricao: "Zona de Excelência: alto nível de satisfação com entregas consistentes e relacionamento sólido entre as partes.",
+    zona: "Zona de Excelência",
+    descricao: "alto nível de satisfação com entregas consistentes e relacionamento sólido entre as partes.",
   };
   if (score >= 51) return {
     color: "#86EFAC",
-    descricao: "Zona de Qualidade: boa percepção geral, com espaço para melhorias pontuais que podem elevar o engajamento.",
+    zona: "Zona de Qualidade",
+    descricao: "boa percepção geral, com espaço para melhorias pontuais que podem elevar o engajamento.",
   };
   if (score >= 1) return {
     color: "#EAB308",
-    descricao: "Zona de Aperfeiçoamento: satisfação moderada com oportunidades claras de melhoria na experiência e nas entregas.",
+    zona: "Zona de Aperfeiçoamento",
+    descricao: "satisfação moderada com oportunidades claras de melhoria na experiência e nas entregas.",
   };
   return {
     color: "#EF4444",
-    descricao: "Zona Crítica: índice de insatisfação elevado que requer atenção imediata e ações corretivas prioritárias.",
+    zona: "Zona Crítica",
+    descricao: "índice de insatisfação elevado que requer atenção imediata e ações corretivas prioritárias.",
   };
 }
 
@@ -61,7 +66,7 @@ export function NPSSection({ historico, scoreAtual, notasCounts, empresa }: NPSS
             </div>
           </div>
           <p className="text-xs font-normal leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
-            {zone.descricao}
+            <strong className="font-semibold text-white/75">{zone.zona}:</strong> {zone.descricao}
           </p>
         </div>
 
