@@ -97,7 +97,12 @@ function parseNPSRows(rows: string[][]): Map<string, { historico: NPSEntry[]; sc
       const qtdPromotores = notas.filter(n => n >= 9).length;
       const qtdDetratores = notas.filter(n => n <= 6).length;
       const score = Math.round(((qtdPromotores - qtdDetratores) / qtdTotal) * 100);
-      npsEntries.push({ mes, score, classificacao: npsClassificacao(score), qtdTotal, qtdPromotores, qtdDetratores });
+      const notasCounts: Record<string, number> = {};
+      for (const n of notas) {
+        const key = String(Math.round(n));
+        notasCounts[key] = (notasCounts[key] ?? 0) + 1;
+      }
+      npsEntries.push({ mes, score, classificacao: npsClassificacao(score), qtdTotal, qtdPromotores, qtdDetratores, notasCounts });
     }
 
     // Sort chronologically

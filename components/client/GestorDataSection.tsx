@@ -154,6 +154,13 @@ export function GestorDataSection({
     ? Math.round(((totalPromotores - totalDetratores) / totalNPS) * 100)
     : scoreAtual;
 
+  const notasCountsFiltrado: Record<string, number> = {};
+  for (const e of npsFiltrado) {
+    for (const [nota, count] of Object.entries(e.notasCounts ?? {})) {
+      notasCountsFiltrado[nota] = (notasCountsFiltrado[nota] ?? 0) + count;
+    }
+  }
+
   const totalValorMensal = latest?.valorMensal ?? 0;
   const qtdAlocados = latest?.qtdAlocados ?? 0;
   const avgSalario = latest?.salarioMedio ?? 0;
@@ -309,6 +316,7 @@ export function GestorDataSection({
               historico={npsFiltrado}
               gestores={npsGestores}
               scoreAtual={scoreAtualFiltrado}
+              notasCounts={notasCountsFiltrado}
               empresa={empresa}
             />
           </section>

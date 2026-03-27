@@ -28,6 +28,7 @@ export interface NPSEntry {
   qtdTotal: number;
   qtdPromotores: number;
   qtdDetratores: number;
+  notasCounts?: Record<string, number>; // e.g. { "10": 5, "9": 2, "8": 1 }
   comentario?: string;
 }
 

@@ -30,10 +30,11 @@ interface NPSSectionProps {
   historico: NPSEntry[];
   gestores: ManagerNPS[];
   scoreAtual: number;
+  notasCounts: Record<string, number>;
   empresa: string;
 }
 
-export function NPSSection({ historico, scoreAtual, empresa }: NPSSectionProps) {
+export function NPSSection({ historico, scoreAtual, notasCounts, empresa }: NPSSectionProps) {
   const zone = getZoneInfo(scoreAtual);
 
   return (
@@ -67,7 +68,7 @@ export function NPSSection({ historico, scoreAtual, empresa }: NPSSectionProps) 
         {/* Nota por Record Count — pizza */}
         <div className="glass-card rounded-2xl p-8">
           <p className="section-label mb-6">Nota por Record Count</p>
-          <NPSPieChart data={historico} />
+          <NPSPieChart notasCounts={notasCounts} />
         </div>
 
         {/* Classificação no período — barras */}
