@@ -6,7 +6,7 @@ import { NPSClassificacaoChart } from "@/components/charts/NPSClassificacaoChart
 function getZoneInfo(score: number): { color: string; descricao: string } {
   if (score >= 91) return {
     color: "#3B82F6",
-    descricao: "Zona de Encantamento: clientes altamente satisfeitos e engajados, com forte potencial de indicação e expansão do contrato.",
+    descricao: "Zona de Encantamento: alocados altamente satisfeitos e engajados, com forte potencial de indicação e expansão do contrato.",
   };
   if (score >= 76) return {
     color: "#22C55E",
