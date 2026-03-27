@@ -1,6 +1,6 @@
 "use client";
 
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 
 interface NPSPieChartProps {
   notasCounts: Record<string, number>;
@@ -25,6 +25,21 @@ const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: an
   );
 };
 
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const { nota, value } = payload[0].payload;
+    return (
+      <div className="glass-card rounded-xl p-3 text-xs">
+        <p className="text-white/50 mb-1">Nota {nota}</p>
+        <p className="font-semibold" style={{ color: colorForNota(nota) }}>
+          {value} {value === 1 ? "alocado" : "alocados"}
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
 export function NPSPieChart({ notasCounts }: NPSPieChartProps) {
   const total = Object.values(notasCounts).reduce((s, v) => s + v, 0) || 1;
 
@@ -37,43 +52,25 @@ export function NPSPieChart({ notasCounts }: NPSPieChartProps) {
     }));
 
   return (
-    <div className="flex flex-col gap-4">
-      <ResponsiveContainer width="100%" height={200}>
-        <PieChart>
-          <Pie
-            data={chartData}
-            cx="50%"
-            cy="50%"
-            innerRadius={55}
-            outerRadius={85}
-            paddingAngle={2}
-            dataKey="value"
-            labelLine={false}
-            label={<CustomLabel />}
-          >
-            {chartData.map((entry) => (
-              <Cell key={entry.nota} fill={colorForNota(entry.nota)} />
-            ))}
-          </Pie>
-        </PieChart>
-      </ResponsiveContainer>
-
-      {/* Legenda */}
-      <div className="flex flex-col gap-1.5">
-        {chartData.map((entry) => (
-          <div key={entry.nota} className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: colorForNota(entry.nota) }} />
-              <span className="text-xs" style={{ color: "rgba(255,255,255,0.55)" }}>
-                Nota {entry.nota}
-              </span>
-            </div>
-            <span className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.75)" }}>
-              {entry.value} {entry.value === 1 ? "alocado" : "alocados"}
-            </span>
-          </div>
-        ))}
-      </div>
-    </div>
+    <ResponsiveContainer width="100%" height={220}>
+      <PieChart>
+        <Pie
+          data={chartData}
+          cx="50%"
+          cy="50%"
+          innerRadius={60}
+          outerRadius={90}
+          paddingAngle={2}
+          dataKey="value"
+          labelLine={false}
+          label={<CustomLabel />}
+        >
+          {chartData.map((entry) => (
+            <Cell key={entry.nota} fill={colorForNota(entry.nota)} />
+          ))}
+        </Pie>
+        <Tooltip content={<CustomTooltip />} />
+      </PieChart>
+    </ResponsiveContainer>
   );
 }
