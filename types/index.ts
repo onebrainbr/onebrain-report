@@ -25,6 +25,9 @@ export interface NPSEntry {
   mes: string;
   score: number; // -100 a 100
   classificacao: "Promotor" | "Neutro" | "Detrator";
+  qtdTotal: number;
+  qtdPromotores: number;
+  qtdDetratores: number;
   comentario?: string;
 }
 

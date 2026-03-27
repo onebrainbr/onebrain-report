@@ -137,6 +137,23 @@ export function GestorDataSection({
   const historico = buildHistorico(filtered, fromIndex, toIndex);
   const latest = historico[historico.length - 1];
 
+  // Filtra NPS pelo período e recalcula scoreAtual com os dados agregados do período
+  const MES_ORDER = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+  function mesToIndex(mes: string): number {
+    const [m, y] = mes.split("/");
+    return Number(y) * 12 + MES_ORDER.indexOf(m);
+  }
+  const npsFiltrado = npsHistorico.filter((e) => {
+    const idx = mesToIndex(e.mes);
+    return (fromIndex == null || idx >= fromIndex) && (toIndex == null || idx <= toIndex);
+  });
+  const totalNPS = npsFiltrado.reduce((s, e) => s + e.qtdTotal, 0);
+  const totalPromotores = npsFiltrado.reduce((s, e) => s + e.qtdPromotores, 0);
+  const totalDetratores = npsFiltrado.reduce((s, e) => s + e.qtdDetratores, 0);
+  const scoreAtualFiltrado = totalNPS > 0
+    ? Math.round(((totalPromotores - totalDetratores) / totalNPS) * 100)
+    : scoreAtual;
+
   const totalValorMensal = latest?.valorMensal ?? 0;
   const qtdAlocados = latest?.qtdAlocados ?? 0;
   const avgSalario = latest?.salarioMedio ?? 0;
@@ -289,9 +306,9 @@ export function GestorDataSection({
               analisado.
             </p>
             <NPSSection
-              historico={npsHistorico}
+              historico={npsFiltrado}
               gestores={npsGestores}
-              scoreAtual={scoreAtual}
+              scoreAtual={scoreAtualFiltrado}
               empresa={empresa}
             />
           </section>
