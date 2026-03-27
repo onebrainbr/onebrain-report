@@ -1,6 +1,6 @@
 import { google } from "googleapis";
-import { DashboardData, ContractType } from "@/types";
-import { slugify } from "@/lib/utils";
+import { DashboardData, ContractType, NPSEntry } from "@/types";
+import { slugify, npsClassificacao } from "@/lib/utils";
 
 const CONTRACT_TYPE_MAP: Record<string, ContractType> = {
   "essentials": "ESSENTIALS",
@@ -48,16 +48,89 @@ async function readSheet(sheetName: string): Promise<string[][]> {
   return (response.data.values as string[][]) ?? [];
 }
 
+// NPS Clientes columns (0-indexed): 0: Data | 1: Nota | 2: Cliente
+function parseNPSRows(rows: string[][]): Map<string, NPSEntry[]> {
+  const MES_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  // Map: slugifiedCliente → array of { mes, nota }
+  const rawByClient = new Map<string, { mes: string; nota: number }[]>();
+
+  for (const row of rows) {
+    const rawData = (row[0] ?? "").trim();
+    const rawNota = (row[1] ?? "").trim();
+    const rawCliente = (row[2] ?? "").trim();
+    if (!rawData || !rawNota || !rawCliente) continue;
+
+    const nota = Number(rawNota.replace(",", "."));
+    if (isNaN(nota)) continue;
+
+    // Parse date: DD/MM/YYYY or MM/YYYY
+    let mes: string | null = null;
+    const parts = rawData.split("/");
+    if (parts.length === 3) {
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parts[2];
+      mes = `${MES_NAMES[month]}/${year}`;
+    } else if (parts.length === 2) {
+      const month = parseInt(parts[0], 10) - 1;
+      const year = parts[1];
+      mes = `${MES_NAMES[month]}/${year}`;
+    }
+    if (!mes) continue;
+
+    const key = slugify(rawCliente);
+    if (!rawByClient.has(key)) rawByClient.set(key, []);
+    rawByClient.get(key)!.push({ mes, nota });
+  }
+
+  // Calculate NPS per client per month
+  const result = new Map<string, NPSEntry[]>();
+  for (const [clientKey, entries] of rawByClient) {
+    const byMes = new Map<string, number[]>();
+    for (const { mes, nota } of entries) {
+      if (!byMes.has(mes)) byMes.set(mes, []);
+      byMes.get(mes)!.push(nota);
+    }
+
+    const npsEntries: NPSEntry[] = [];
+    for (const [mes, notas] of byMes) {
+      const total = notas.length;
+      const promotores = notas.filter(n => n >= 9).length;
+      const detratores = notas.filter(n => n <= 6).length;
+      const score = Math.round(((promotores - detratores) / total) * 100);
+      npsEntries.push({ mes, score, classificacao: npsClassificacao(score) });
+    }
+
+    // Sort chronologically
+    npsEntries.sort((a, b) => {
+      const [mA, yA] = a.mes.split("/");
+      const [mB, yB] = b.mes.split("/");
+      const MES = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
+      return yA !== yB ? Number(yA) - Number(yB) : MES.indexOf(mA) - MES.indexOf(mB);
+    });
+
+    result.set(clientKey, npsEntries);
+  }
+
+  return result;
+}
+
+function calcScoreAtual(historico: NPSEntry[]): number {
+  if (!historico.length) return 0;
+  return historico[historico.length - 1].score;
+}
+
 // Spreadsheet columns (0-indexed):
 // 0: Cliente | 1: Gestor | 2: Tipo de Contrato | 3: Alocado
 // 4: Data de Admissão | 5: Tempo alocado | 6: Salário | 7: Valor Hora | 8: Valor Mensal
 // Each row is one allocated professional. Grouped by empresa (slug = slugify(empresa)).
 export async function fetchSheetsData(): Promise<DashboardData> {
-  const [managersRows] = await Promise.all([
+  const [managersRows, npsRows] = await Promise.all([
     readSheet("relatorio gestores"),
+    readSheet("NPS Clientes"),
   ]);
 
   const rows = managersRows.slice(1); // skip header
+  const npsMap = parseNPSRows(npsRows.slice(1)); // skip header
 
   const MES_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
   const now = new Date();
@@ -82,9 +155,9 @@ export async function fetchSheetsData(): Promise<DashboardData> {
           inicioContrato: row[4] ?? "",
           alocados: [],
           historico: [],
-          npsHistorico: [],
+          npsHistorico: npsMap.get(slugify(empresa)) ?? [],
           npsGestores: [],
-          scoreAtual: 0,
+          scoreAtual: calcScoreAtual(npsMap.get(slugify(empresa)) ?? []),
           economiaGerada: [],
           indicadoresSucesso: [],
           oportunidadeExpansao: "",
