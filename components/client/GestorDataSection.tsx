@@ -172,7 +172,7 @@ export function GestorDataSection({
   return (
     <>
       {/* Gestor selector */}
-      <section className="py-12 border-t border-white/8">
+      <section className="py-12">
         <p className="section-label mb-3">Gestor</p>
         <h2 className="text-3xl font-semibold text-white mb-6">Selecione o gestor</h2>
         <div className="relative max-w-sm">
