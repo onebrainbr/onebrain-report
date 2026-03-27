@@ -47,7 +47,7 @@ export function BarAllocationChart({ data }: BarAllocationChartProps) {
           tickLine={false}
           allowDecimals={false}
         />
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
         <Bar dataKey="qtdAlocados" radius={[4, 4, 0, 0]}>
           {data.map((entry, index) => (
             <Cell
