@@ -48,16 +48,16 @@ async function readSheet(sheetName: string): Promise<string[][]> {
   return (response.data.values as string[][]) ?? [];
 }
 
-// NPS Clientes columns (0-indexed): 0: Data | 1: Nota | 2: Cliente
-function parseNPSRows(rows: string[][]): Map<string, NPSEntry[]> {
+// NPS Clientes columns (0-indexed): 0: Empresa | 1: Data | 2: Nota | 3: Justificativa | 4: Cliente
+function parseNPSRows(rows: string[][]): Map<string, { historico: NPSEntry[]; scoreAtual: number }> {
   const MES_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
   // Map: slugifiedCliente → array of { mes, nota }
   const rawByClient = new Map<string, { mes: string; nota: number }[]>();
 
   for (const row of rows) {
-    const rawData = (row[0] ?? "").trim();
-    const rawNota = (row[1] ?? "").trim();
-    const rawCliente = (row[2] ?? "").trim();
+    const rawData = (row[1] ?? "").trim();
+    const rawNota = (row[2] ?? "").trim();
+    const rawCliente = (row[4] ?? "").trim();
     if (!rawData || !rawNota || !rawCliente) continue;
 
     const nota = Number(rawNota.replace(",", "."));
@@ -82,8 +82,8 @@ function parseNPSRows(rows: string[][]): Map<string, NPSEntry[]> {
     rawByClient.get(key)!.push({ mes, nota });
   }
 
-  // Calculate NPS per client per month
-  const result = new Map<string, NPSEntry[]>();
+  // Calculate NPS per client per month + overall score
+  const result = new Map<string, { historico: NPSEntry[]; scoreAtual: number }>();
   for (const [clientKey, entries] of rawByClient) {
     const byMes = new Map<string, number[]>();
     for (const { mes, nota } of entries) {
@@ -101,22 +101,26 @@ function parseNPSRows(rows: string[][]): Map<string, NPSEntry[]> {
     }
 
     // Sort chronologically
+    const MES_ORDER = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
     npsEntries.sort((a, b) => {
       const [mA, yA] = a.mes.split("/");
       const [mB, yB] = b.mes.split("/");
-      const MES = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-      return yA !== yB ? Number(yA) - Number(yB) : MES.indexOf(mA) - MES.indexOf(mB);
+      return yA !== yB ? Number(yA) - Number(yB) : MES_ORDER.indexOf(mA) - MES_ORDER.indexOf(mB);
     });
 
-    result.set(clientKey, npsEntries);
+    // Overall NPS across all entries for this client
+    const allNotas = entries.map(e => e.nota);
+    const totalGeral = allNotas.length;
+    const promotoresGeral = allNotas.filter(n => n >= 9).length;
+    const detratoresGeral = allNotas.filter(n => n <= 6).length;
+    const scoreAtual = totalGeral > 0
+      ? Math.round(((promotoresGeral - detratoresGeral) / totalGeral) * 100)
+      : 0;
+
+    result.set(clientKey, { historico: npsEntries, scoreAtual });
   }
 
   return result;
-}
-
-function calcScoreAtual(historico: NPSEntry[]): number {
-  if (!historico.length) return 0;
-  return historico[historico.length - 1].score;
 }
 
 // Spreadsheet columns (0-indexed):
@@ -155,9 +159,9 @@ export async function fetchSheetsData(): Promise<DashboardData> {
           inicioContrato: row[4] ?? "",
           alocados: [],
           historico: [],
-          npsHistorico: npsMap.get(slugify(empresa)) ?? [],
+          npsHistorico: npsMap.get(slugify(empresa))?.historico ?? [],
           npsGestores: [],
-          scoreAtual: calcScoreAtual(npsMap.get(slugify(empresa)) ?? []),
+          scoreAtual: npsMap.get(slugify(empresa))?.scoreAtual ?? 0,
           economiaGerada: [],
           indicadoresSucesso: [],
           oportunidadeExpansao: "",
