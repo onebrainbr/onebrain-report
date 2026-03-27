@@ -14,13 +14,7 @@ export function NPSSection({ historico, scoreAtual, empresa }: NPSSectionProps) 
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Linha 1: Evolução histórica */}
-      <div className="glass-card rounded-2xl p-8">
-        <p className="section-label mb-6">Evolução histórica</p>
-        <NPSLineChart data={historico} />
-      </div>
-
-      {/* Linha 2: Score Onebrain + Nota por Record Count + Classificação */}
+      {/* Linha 1: Score Onebrain + Nota por Record Count + Classificação */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Score cliente */}
         <div className="glass-card rounded-2xl p-8 flex flex-col gap-4">
@@ -57,6 +51,12 @@ export function NPSSection({ historico, scoreAtual, empresa }: NPSSectionProps) 
           <p className="section-label mb-6">Classificação no período</p>
           <NPSClassificacaoChart data={historico} />
         </div>
+      </div>
+
+      {/* Linha 2: Evolução histórica */}
+      <div className="glass-card rounded-2xl p-8">
+        <p className="section-label mb-6">Evolução histórica</p>
+        <NPSLineChart data={historico} />
       </div>
     </div>
   );
