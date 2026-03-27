@@ -36,13 +36,14 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function NPSClassificacaoChart({ data }: NPSClassificacaoChartProps) {
-  const counts: Record<string, number> = { Promotor: 0, Neutro: 0, Detrator: 0 };
-  data.forEach((e) => { counts[e.classificacao] = (counts[e.classificacao] ?? 0) + 1; });
+  const promotores = data.reduce((s, e) => s + e.qtdPromotores, 0);
+  const detratores = data.reduce((s, e) => s + e.qtdDetratores, 0);
+  const neutros = data.reduce((s, e) => s + (e.qtdTotal - e.qtdPromotores - e.qtdDetratores), 0);
 
   const chartData = [
-    { name: "Promotor", value: counts.Promotor },
-    { name: "Neutro", value: counts.Neutro },
-    { name: "Detrator", value: counts.Detrator },
+    { name: "Promotor", value: promotores },
+    { name: "Neutro", value: neutros },
+    { name: "Detrator", value: detratores },
   ];
 
   return (
