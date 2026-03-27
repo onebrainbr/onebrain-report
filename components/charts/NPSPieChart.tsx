@@ -52,7 +52,7 @@ export function NPSPieChart({ notasCounts }: NPSPieChartProps) {
             dataKey="value"
             labelLine={false}
             label={<CustomLabel />}
-            onMouseEnter={(data) => setHovered({ nota: data.nota, value: data.value })}
+            onMouseEnter={(data: any) => setHovered({ nota: data.nota, value: data.value })}
             onMouseLeave={() => setHovered(null)}
           >
             {chartData.map((entry) => (
