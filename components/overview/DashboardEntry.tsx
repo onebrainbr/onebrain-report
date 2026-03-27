@@ -82,10 +82,9 @@ export function DashboardEntry({ clientes }: Props) {
 
         {/* Content constrained to max width */}
         <div className="max-w-screen-xl mx-auto px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Left: headline */}
           <div>
-            <p className="section-label mb-6">Relatório executivo · Jun/2025 — hoje</p>
             <h1
               className="text-5xl md:text-6xl font-semibold text-white leading-[1.05] mb-8 tracking-tight"
             >
