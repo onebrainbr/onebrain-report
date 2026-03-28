@@ -59,8 +59,7 @@ export function NPSPieChart({ notasCounts }: NPSPieChartProps) {
               <Cell
                 key={entry.nota}
                 fill={colorForNota(entry.nota)}
-                opacity={hovered && hovered.nota !== entry.nota ? 0.4 : 1}
-                style={{ cursor: "pointer", transition: "opacity 0.15s" }}
+                style={{ cursor: "pointer" }}
               />
             ))}
           </Pie>
