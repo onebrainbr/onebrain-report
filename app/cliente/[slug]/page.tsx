@@ -39,7 +39,7 @@ export default async function ClientePage({ params, searchParams }: PageProps) {
           scoreAtual={cliente.scoreAtual}
           empresa={cliente.empresa}
           oportunidadeExpansao={cliente.oportunidadeExpansao}
-          card1Economia={cliente.card1Economia}
+          economiaCards={cliente.economiaCards}
           from={from}
           to={to}
         />

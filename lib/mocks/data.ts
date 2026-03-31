@@ -63,11 +63,12 @@ export const mockData: DashboardData = {
           descricao: "Encargos e verbas rescisórias evitados com modelo de alocação flexível.",
         },
       ],
-      card1Economia: {
-        titulo: "30%",
-        subtitulo: "Redução de custo de contratação",
-        texto: "Reter profissionais e evitar substituições não planejadas. Elimina custos de recrutamento, cadeira vazia e perda irreversível de contexto técnico.",
-      },
+      economiaCards: [
+        { titulo: "30%", subtitulo: "Redução de custo de contratação", texto: "Reter profissionais e evitar substituições não planejadas. Elimina custos de recrutamento, cadeira vazia e perda irreversível de contexto técnico." },
+        { titulo: "≈R$17K /mês", subtitulo: "Economia com estrutura de hunting", texto: "Economia por não precisar manter estrutura interna de recrutamento e ferramentas necessárias para realizar o trabalho." },
+        { titulo: ">5% /mês", subtitulo: "Economia pela mitigação de turnover inicial", texto: "Redução de desligamentos no primeiro ano atua diretamente na mitigação de custos de substituição." },
+        { titulo: "40%", subtitulo: "Redução de contratações equivocadas", texto: "A ação reduz o tempo de produtividade de 6 p/ 3 meses, economizando metade com novos colaboradores." },
+      ],
       indicadoresSucesso: [
         { label: "SLA de onboarding < 48h", atingido: true },
         { label: "Zero turnover no período", atingido: true },
@@ -127,11 +128,9 @@ export const mockData: DashboardData = {
           descricao: "Valor de continuidade operacional garantida durante férias e afastamentos do time.",
         },
       ],
-      card1Economia: {
-        titulo: "25%",
-        subtitulo: "Redução no custo por posição",
-        texto: "Modelo Essentials elimina o overhead de estrutura dedicada, mantendo qualidade de entrega e SLA de onboarding garantido.",
-      },
+      economiaCards: [
+        { titulo: "25%", subtitulo: "Redução no custo por posição", texto: "Modelo Essentials elimina o overhead de estrutura dedicada, mantendo qualidade de entrega e SLA de onboarding garantido." },
+      ],
       indicadoresSucesso: [
         { label: "SLA de onboarding < 48h", atingido: true },
         { label: "Cobertura de férias garantida", atingido: true },
@@ -184,11 +183,9 @@ export const mockData: DashboardData = {
           descricao: "Posições críticas preenchidas em média 45 dias mais rápido que mercado.",
         },
       ],
-      card1Economia: {
-        titulo: "45%",
-        subtitulo: "Redução no fee de hunting",
-        texto: "Pipeline contínuo de talentos sênior elimina dependência de consultorias externas e reduz o custo por posição fechada.",
-      },
+      economiaCards: [
+        { titulo: "45%", subtitulo: "Redução no fee de hunting", texto: "Pipeline contínuo de talentos sênior elimina dependência de consultorias externas e reduz o custo por posição fechada." },
+      ],
       indicadoresSucesso: [
         { label: "Posições fechadas no prazo", atingido: true },
         { label: "Perfis dentro do nível esperado", atingido: true },
