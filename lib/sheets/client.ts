@@ -152,7 +152,7 @@ export async function fetchSheetsData(): Promise<DashboardData> {
   const [managersRows, npsRows, contentRows] = await Promise.all([
     readSheet("relatorio gestores"),
     readSheet("NPS Clientes"),
-    readSheet("Gestao de conteudo"),
+    readSheet("Gestao de conteudo").catch(() => [] as string[][]),
   ]);
 
   const rows = managersRows.slice(1); // skip header
