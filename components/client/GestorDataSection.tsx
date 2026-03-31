@@ -178,14 +178,10 @@ export function GestorDataSection({
     <>
       {/* Gestor selector */}
       <section className="py-12" data-pdf-hide>
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <p className="section-label mb-3">Gestor</p>
-            <h2 className="text-3xl font-semibold text-white">Selecione o gestor</h2>
-          </div>
-          <DownloadPDFButton />
-        </div>
-        <div className="relative max-w-sm">
+        <p className="section-label mb-3">Gestor</p>
+        <h2 className="text-3xl font-semibold text-white mb-6">Selecione o gestor</h2>
+        <div className="flex items-center gap-4">
+        <div className="relative max-w-sm flex-1">
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -240,6 +236,8 @@ export function GestorDataSection({
               ))}
             </div>
           )}
+        </div>
+        <DownloadPDFButton />
         </div>
       </section>
 

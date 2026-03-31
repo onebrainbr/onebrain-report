@@ -7,7 +7,7 @@ export function DownloadPDFButton() {
     <button
       onClick={() => window.print()}
       data-pdf-hide
-      className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all"
+      className="flex items-center gap-2 px-5 h-14 rounded-xl text-sm font-medium transition-all whitespace-nowrap"
       style={{
         background: 'rgba(255,255,255,0.07)',
         border: '1px solid rgba(255,255,255,0.12)',
