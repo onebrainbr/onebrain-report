@@ -60,3 +60,14 @@
 
   .recharts-tooltip-wrapper { outline: none !important; }
 }
+
+/* ─── PDF Export ────────────────────────────────────────── */
+body.pdf-exporting [data-pdf-hide] {
+  display: none !important;
+}
+body.pdf-exporting header {
+  display: none !important;
+}
+body.pdf-exporting #report-content {
+  padding-top: 0 !important;
+}
