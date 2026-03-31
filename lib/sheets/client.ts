@@ -133,14 +133,16 @@ function parseNPSRows(rows: string[][]): Map<string, { historico: NPSEntry[]; sc
 // 4: Data de Admissão | 5: Tempo alocado | 6: Salário | 7: Valor Hora | 8: Valor Mensal
 // Each row is one allocated professional. Grouped by empresa (slug = slugify(empresa)).
 // Reads "gestao conteudo" sheet and returns card1 content keyed by ContractType
-// Columns (0-indexed): 0: Tipo de Contrato | 1: Card 1 Economia Titulo | 2: Card 1 Economia Subtitulo | 3: Card 1 Economia Texto
+// Columns (0-indexed):
+// 0: Tipo de Contrato | 1: Card Características | 2: Card Vantages
+// 3: Card 1 Economia Titulo | 4: Card 1 Economia Subtitulo | 5: Card 1 Economia Texto
 function parseContentRows(rows: string[][]): Map<ContractType, Card1EconomiaContent> {
   const result = new Map<ContractType, Card1EconomiaContent>();
   for (const row of rows) {
     const contractType = parseContractType(row[0] ?? "");
-    const titulo = (row[1] ?? "").trim();
-    const subtitulo = (row[2] ?? "").trim();
-    const texto = (row[3] ?? "").trim();
+    const titulo = (row[3] ?? "").trim();
+    const subtitulo = (row[4] ?? "").trim();
+    const texto = (row[5] ?? "").trim();
     if (titulo) {
       result.set(contractType, { titulo, subtitulo, texto });
     }
