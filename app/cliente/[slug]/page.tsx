@@ -5,7 +5,7 @@ import { ClientHeader } from "@/components/client/ClientHeader";
 import { GestorDataSection } from "@/components/client/GestorDataSection";
 import { getClientById, getAllClients } from "@/lib/data";
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export async function generateStaticParams() {
   const clientes = await getAllClients();
