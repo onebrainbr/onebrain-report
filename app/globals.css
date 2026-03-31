@@ -90,4 +90,24 @@
     background-color: #000 !important;
     color: #fff !important;
   }
+
+  /* Evita cortes dentro de cards, gráficos e seções */
+  .glass-card,
+  section,
+  table,
+  tr,
+  figure,
+  .recharts-wrapper,
+  .recharts-surface {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Evita cortes logo após títulos de seção */
+  h2,
+  h3,
+  .section-label {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
+  }
 }
