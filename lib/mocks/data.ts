@@ -63,6 +63,11 @@ export const mockData: DashboardData = {
           descricao: "Encargos e verbas rescisórias evitados com modelo de alocação flexível.",
         },
       ],
+      card1Economia: {
+        titulo: "30%",
+        subtitulo: "Redução de custo de contratação",
+        texto: "Reter profissionais e evitar substituições não planejadas. Elimina custos de recrutamento, cadeira vazia e perda irreversível de contexto técnico.",
+      },
       indicadoresSucesso: [
         { label: "SLA de onboarding < 48h", atingido: true },
         { label: "Zero turnover no período", atingido: true },
@@ -122,6 +127,11 @@ export const mockData: DashboardData = {
           descricao: "Valor de continuidade operacional garantida durante férias e afastamentos do time.",
         },
       ],
+      card1Economia: {
+        titulo: "25%",
+        subtitulo: "Redução no custo por posição",
+        texto: "Modelo Essentials elimina o overhead de estrutura dedicada, mantendo qualidade de entrega e SLA de onboarding garantido.",
+      },
       indicadoresSucesso: [
         { label: "SLA de onboarding < 48h", atingido: true },
         { label: "Cobertura de férias garantida", atingido: true },
@@ -174,6 +184,11 @@ export const mockData: DashboardData = {
           descricao: "Posições críticas preenchidas em média 45 dias mais rápido que mercado.",
         },
       ],
+      card1Economia: {
+        titulo: "45%",
+        subtitulo: "Redução no fee de hunting",
+        texto: "Pipeline contínuo de talentos sênior elimina dependência de consultorias externas e reduz o custo por posição fechada.",
+      },
       indicadoresSucesso: [
         { label: "Posições fechadas no prazo", atingido: true },
         { label: "Perfis dentro do nível esperado", atingido: true },

@@ -1,10 +1,6 @@
-const cards = [
-  {
-    value: "30%",
-    title: "Redução de custo de contratação",
-    description:
-      "Reter profissionais e evitar substituições não planejadas. Elimina custos de recrutamento, cadeira vazia e perda irreversível de contexto técnico.",
-  },
+import { Card1EconomiaContent } from "@/types";
+
+const staticCards = [
   {
     value: "≈R$17K /mês",
     title: "Economia com estrutura de hunting",
@@ -25,17 +21,38 @@ const cards = [
   },
 ];
 
-export function EconomyGerada() {
+interface EconomyGeradaProps {
+  card1?: Card1EconomiaContent | null;
+}
+
+export function EconomyGerada({ card1 }: EconomyGeradaProps) {
   return (
     <section className="py-12 border-t border-white/8">
       <p className="section-label mb-3">Impacto financeiro</p>
       <h2 className="text-3xl font-semibold text-white mb-10">Economia Gerada</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {cards.map((card) => (
-          <div key={card.title} className="glass-card rounded-2xl p-8 flex flex-col gap-4">
+        {/* Card 1 — dinâmico via planilha "Gestao de conteudo" */}
+        <div className="glass-card rounded-2xl p-8 flex flex-col gap-4">
+          <p className="text-4xl font-semibold text-white leading-none">
+            {card1?.titulo ?? "30%"}
+          </p>
+          <div>
+            <p className="text-base font-semibold text-white mb-2">
+              {card1?.subtitulo ?? "Redução de custo de contratação"}
+            </p>
             <p
-              className="text-4xl font-semibold text-white leading-none"
+              className="text-sm font-normal leading-relaxed"
+              style={{ color: "rgba(255,255,255,0.65)" }}
             >
+              {card1?.texto ?? "Reter profissionais e evitar substituições não planejadas. Elimina custos de recrutamento, cadeira vazia e perda irreversível de contexto técnico."}
+            </p>
+          </div>
+        </div>
+
+        {/* Cards 2, 3, 4 — estáticos */}
+        {staticCards.map((card) => (
+          <div key={card.title} className="glass-card rounded-2xl p-8 flex flex-col gap-4">
+            <p className="text-4xl font-semibold text-white leading-none">
               {card.value}
             </p>
             <div>

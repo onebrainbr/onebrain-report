@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown, Users, DollarSign, TrendingUp, Clock } from "lucide-react";
-import { Allocation, NPSEntry, ManagerNPS, ContractType } from "@/types";
+import { Allocation, NPSEntry, ManagerNPS, ContractType, Card1EconomiaContent } from "@/types";
 import { ContractDetails } from "@/components/client/ContractDetails";
 import { KPICard } from "@/components/ui/KPICard";
 import { AllocationTable } from "@/components/client/AllocationTable";
@@ -97,6 +97,7 @@ interface Props {
   scoreAtual: number;
   empresa: string;
   oportunidadeExpansao: string;
+  card1Economia?: Card1EconomiaContent | null;
   from?: string;
   to?: string;
 }
@@ -109,6 +110,7 @@ export function GestorDataSection({
   scoreAtual,
   empresa,
   oportunidadeExpansao,
+  card1Economia,
   from,
   to,
 }: Props) {
@@ -296,7 +298,7 @@ export function GestorDataSection({
             <AllocationTable alocados={filtered} />
           </section>
 
-          <EconomyGerada />
+          <EconomyGerada card1={card1Economia} />
 
           {/* NPS */}
           <section className="py-12 border-t border-white/8">

@@ -50,6 +50,12 @@ export interface EconomyItem {
   descricao: string;
 }
 
+export interface Card1EconomiaContent {
+  titulo: string;    // Card 1 Economia Titulo
+  subtitulo: string; // Card 1 Economia Subtitulo
+  texto: string;     // Card 1 Economia Texto
+}
+
 export interface ClientData {
   id: string; // slug: "ifood", "petz"
   empresa: string;
@@ -63,6 +69,7 @@ export interface ClientData {
   npsGestores: ManagerNPS[];
   scoreAtual: number; // 0-100
   economiaGerada: EconomyItem[];
+  card1Economia: Card1EconomiaContent | null;
   indicadoresSucesso: SuccessIndicator[];
   oportunidadeExpansao: string;
   observacoes?: string;
