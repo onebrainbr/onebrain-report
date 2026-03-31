@@ -40,6 +40,7 @@ export default async function ClientePage({ params, searchParams }: PageProps) {
           empresa={cliente.empresa}
           oportunidadeExpansao={cliente.oportunidadeExpansao}
           economiaCards={cliente.economiaCards}
+          indicadoresCards={cliente.indicadoresCards}
           from={from}
           to={to}
         />

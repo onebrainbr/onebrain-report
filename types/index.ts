@@ -70,6 +70,7 @@ export interface ClientData {
   scoreAtual: number; // 0-100
   economiaGerada: EconomyItem[];
   economiaCards: EconomiaCardContent[];
+  indicadoresCards: EconomiaCardContent[];
   indicadoresSucesso: SuccessIndicator[];
   oportunidadeExpansao: string;
   observacoes?: string;

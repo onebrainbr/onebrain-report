@@ -43,7 +43,7 @@ async function readSheet(sheetName: string): Promise<string[][]> {
   const sheets = google.sheets({ version: "v4", auth });
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: `${sheetName}!A:Z`,
+    range: `${sheetName}!A:AB`,
   });
   return (response.data.values as string[][]) ?? [];
 }
@@ -149,19 +149,28 @@ function parseCard(row: string[], startIndex: number): EconomiaCardContent | nul
   };
 }
 
-function parseContentRows(rows: string[][]): Map<ContractType, EconomiaCardContent[]> {
-  const result = new Map<ContractType, EconomiaCardContent[]>();
+interface ContentByContract {
+  economiaCards: EconomiaCardContent[];
+  indicadoresCards: EconomiaCardContent[];
+}
+
+function parseContentRows(rows: string[][]): Map<ContractType, ContentByContract> {
+  const result = new Map<ContractType, ContentByContract>();
   for (const row of rows) {
     const contractType = parseContractType(row[0] ?? "");
-    const cards = [
+    const economiaCards = [
       parseCard(row, 3),
       parseCard(row, 6),
       parseCard(row, 9),
       parseCard(row, 12),
     ].filter((c): c is EconomiaCardContent => c !== null);
-    if (cards.length > 0) {
-      result.set(contractType, cards);
-    }
+    const indicadoresCards = [
+      parseCard(row, 15),
+      parseCard(row, 18),
+      parseCard(row, 21),
+      parseCard(row, 24),
+    ].filter((c): c is EconomiaCardContent => c !== null);
+    result.set(contractType, { economiaCards, indicadoresCards });
   }
   return result;
 }
@@ -204,7 +213,8 @@ export async function fetchSheetsData(): Promise<DashboardData> {
           npsGestores: [],
           scoreAtual: npsMap.get(slugify(empresa))?.scoreAtual ?? 0,
           economiaGerada: [],
-          economiaCards: [], // filled below after contract type is known
+          economiaCards: [],     // filled below
+          indicadoresCards: [],  // filled below
           indicadoresSucesso: [],
           oportunidadeExpansao: "",
         },
@@ -244,7 +254,9 @@ export async function fetchSheetsData(): Promise<DashboardData> {
       salarioMedio,
     }];
 
-    client.economiaCards = contentMap.get(client.tipoContrato) ?? [];
+    const content = contentMap.get(client.tipoContrato);
+    client.economiaCards = content?.economiaCards ?? [];
+    client.indicadoresCards = content?.indicadoresCards ?? [];
 
     return client;
   });

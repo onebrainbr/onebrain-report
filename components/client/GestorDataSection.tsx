@@ -98,6 +98,7 @@ interface Props {
   empresa: string;
   oportunidadeExpansao: string;
   economiaCards?: EconomiaCardContent[];
+  indicadoresCards?: EconomiaCardContent[];
   from?: string;
   to?: string;
 }
@@ -111,6 +112,7 @@ export function GestorDataSection({
   empresa,
   oportunidadeExpansao,
   economiaCards,
+  indicadoresCards,
   from,
   to,
 }: Props) {
@@ -323,7 +325,7 @@ export function GestorDataSection({
             />
           </section>
 
-          <SuccessIndicatorsSection />
+          <SuccessIndicatorsSection indicadoresCards={indicadoresCards} />
 
           {/* Próximos Passos */}
           <section className="pt-12 pb-8 border-t border-white/8">
