@@ -32,7 +32,7 @@ export default async function ClientePage({ params, searchParams }: PageProps) {
 
         <ClientHeader client={cliente} />
 
-        <div className="flex justify-end mb-4" data-pdf-hide>
+        <div className="flex justify-end mb-4">
           <DownloadPDFButton empresa={cliente.empresa} />
         </div>
 
