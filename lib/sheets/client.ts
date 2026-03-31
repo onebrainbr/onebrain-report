@@ -132,7 +132,7 @@ function parseNPSRows(rows: string[][]): Map<string, { historico: NPSEntry[]; sc
 // 0: Cliente | 1: Gestor | 2: Tipo de Contrato | 3: Alocado
 // 4: Data de Admissão | 5: Tempo alocado | 6: Salário | 7: Valor Hora | 8: Valor Mensal
 // Each row is one allocated professional. Grouped by empresa (slug = slugify(empresa)).
-// Reads "Gestao de conteudo" sheet and returns card1 content keyed by ContractType
+// Reads "gestao conteudo" sheet and returns card1 content keyed by ContractType
 // Columns (0-indexed): 0: Tipo de Contrato | 1: Card 1 Economia Titulo | 2: Card 1 Economia Subtitulo | 3: Card 1 Economia Texto
 function parseContentRows(rows: string[][]): Map<ContractType, Card1EconomiaContent> {
   const result = new Map<ContractType, Card1EconomiaContent>();
@@ -152,7 +152,7 @@ export async function fetchSheetsData(): Promise<DashboardData> {
   const [managersRows, npsRows, contentRows] = await Promise.all([
     readSheet("relatorio gestores"),
     readSheet("NPS Clientes"),
-    readSheet("Gestao de conteudo").catch(() => [] as string[][]),
+    readSheet("gestao conteudo").catch(() => [] as string[][]),
   ]);
 
   const rows = managersRows.slice(1); // skip header
