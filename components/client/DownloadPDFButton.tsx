@@ -15,7 +15,7 @@ export function DownloadPDFButton() {
       }}
     >
       <Download className="w-4 h-4" />
-      Baixar PDF
+      Baixar Relatório
     </button>
   );
 }

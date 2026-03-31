@@ -3,7 +3,6 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ClientHeader } from "@/components/client/ClientHeader";
 import { GestorDataSection } from "@/components/client/GestorDataSection";
-import { DownloadPDFButton } from "@/components/client/DownloadPDFButton";
 import { getClientById, getAllClients } from "@/lib/data";
 
 export const revalidate = 300;
@@ -31,10 +30,6 @@ export default async function ClientePage({ params, searchParams }: PageProps) {
       <main id="report-content" className="max-w-screen-xl mx-auto px-8 pt-32 pb-24">
 
         <ClientHeader client={cliente} />
-
-        <div className="flex justify-end mb-4">
-          <DownloadPDFButton />
-        </div>
 
         <GestorDataSection
           alocados={cliente.alocados}

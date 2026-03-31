@@ -13,6 +13,7 @@ import { SuccessIndicatorsSection } from "@/components/client/SuccessIndicatorsS
 import { KolivoSection } from "@/components/client/KolivoSection";
 import { EconomyGerada } from "@/components/client/EconomyGerada";
 import { formatCurrencyCompact } from "@/lib/utils";
+import { DownloadPDFButton } from "@/components/client/DownloadPDFButton";
 
 const MES_NAMES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
 
@@ -177,8 +178,13 @@ export function GestorDataSection({
     <>
       {/* Gestor selector */}
       <section className="py-12" data-pdf-hide>
-        <p className="section-label mb-3">Gestor</p>
-        <h2 className="text-3xl font-semibold text-white mb-6">Selecione o gestor</h2>
+        <div className="flex items-start justify-between mb-6">
+          <div>
+            <p className="section-label mb-3">Gestor</p>
+            <h2 className="text-3xl font-semibold text-white">Selecione o gestor</h2>
+          </div>
+          <DownloadPDFButton />
+        </div>
         <div className="relative max-w-sm">
           <button
             type="button"
