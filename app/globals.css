@@ -61,13 +61,24 @@
   .recharts-tooltip-wrapper { outline: none !important; }
 }
 
-/* ─── PDF Export ────────────────────────────────────────── */
-body.pdf-exporting [data-pdf-hide] {
-  display: none !important;
-}
-body.pdf-exporting header {
-  display: none !important;
-}
-body.pdf-exporting #report-content {
-  padding-top: 0 !important;
+/* ─── PDF Export (print) ────────────────────────────────── */
+@media print {
+  [data-pdf-hide] {
+    display: none !important;
+  }
+  header {
+    display: none !important;
+  }
+  footer {
+    display: none !important;
+  }
+  #report-content {
+    padding-top: 1rem !important;
+    max-width: 100% !important;
+  }
+  body {
+    background: #000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
 }
