@@ -55,10 +55,16 @@ const details: Record<
 
 interface Props {
   tipoContrato: ContractType;
+  caracteristicas?: string[];
+  vantagens?: string[];
 }
 
-export function ContractDetails({ tipoContrato }: Props) {
-  const data = details[tipoContrato];
+export function ContractDetails({ tipoContrato, caracteristicas, vantagens }: Props) {
+  const fallback = details[tipoContrato];
+  const data = {
+    caracteristicas: (caracteristicas && caracteristicas.length > 0) ? caracteristicas : fallback.caracteristicas,
+    vantagens: (vantagens && vantagens.length > 0) ? vantagens : fallback.vantagens,
+  };
 
   return (
     <section className="py-12 border-t border-white/8">

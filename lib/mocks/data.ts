@@ -70,6 +70,8 @@ export const mockData: DashboardData = {
         { titulo: "40%", subtitulo: "Redução de contratações equivocadas", texto: "A ação reduz o tempo de produtividade de 6 p/ 3 meses, economizando metade com novos colaboradores." },
       ],
       indicadoresCards: [],
+      contratoCaracteristicas: [],
+      contratoVantagens: [],
       indicadoresSucesso: [
         { label: "SLA de onboarding < 48h", atingido: true },
         { label: "Zero turnover no período", atingido: true },
@@ -133,6 +135,8 @@ export const mockData: DashboardData = {
         { titulo: "25%", subtitulo: "Redução no custo por posição", texto: "Modelo Essentials elimina o overhead de estrutura dedicada, mantendo qualidade de entrega e SLA de onboarding garantido." },
       ],
       indicadoresCards: [],
+      contratoCaracteristicas: [],
+      contratoVantagens: [],
       indicadoresSucesso: [
         { label: "SLA de onboarding < 48h", atingido: true },
         { label: "Cobertura de férias garantida", atingido: true },
@@ -189,6 +193,8 @@ export const mockData: DashboardData = {
         { titulo: "45%", subtitulo: "Redução no fee de hunting", texto: "Pipeline contínuo de talentos sênior elimina dependência de consultorias externas e reduz o custo por posição fechada." },
       ],
       indicadoresCards: [],
+      contratoCaracteristicas: [],
+      contratoVantagens: [],
       indicadoresSucesso: [
         { label: "Posições fechadas no prazo", atingido: true },
         { label: "Perfis dentro do nível esperado", atingido: true },

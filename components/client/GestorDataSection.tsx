@@ -100,6 +100,8 @@ interface Props {
   oportunidadeExpansao: string;
   economiaCards?: EconomiaCardContent[];
   indicadoresCards?: EconomiaCardContent[];
+  contratoCaracteristicas?: string[];
+  contratoVantagens?: string[];
   from?: string;
   to?: string;
 }
@@ -114,6 +116,8 @@ export function GestorDataSection({
   oportunidadeExpansao,
   economiaCards,
   indicadoresCards,
+  contratoCaracteristicas,
+  contratoVantagens,
   from,
   to,
 }: Props) {
@@ -241,7 +245,11 @@ export function GestorDataSection({
         </div>
       </section>
 
-      <ContractDetails tipoContrato={tipoContrato} />
+      <ContractDetails
+        tipoContrato={tipoContrato}
+        caracteristicas={contratoCaracteristicas}
+        vantagens={contratoVantagens}
+      />
 
       {/* Data — shown after gestor is selected */}
       {selectedGestor && (

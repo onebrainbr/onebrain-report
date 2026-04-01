@@ -149,15 +149,26 @@ function parseCard(row: string[], startIndex: number): EconomiaCardContent | nul
   };
 }
 
+function parseStringList(raw: string): string[] {
+  return raw
+    .split(/\n|;/)
+    .map(s => s.trim())
+    .filter(Boolean);
+}
+
 interface ContentByContract {
   economiaCards: EconomiaCardContent[];
   indicadoresCards: EconomiaCardContent[];
+  caracteristicas: string[];
+  vantagens: string[];
 }
 
 function parseContentRows(rows: string[][]): Map<ContractType, ContentByContract> {
   const result = new Map<ContractType, ContentByContract>();
   for (const row of rows) {
     const contractType = parseContractType(row[0] ?? "");
+    const caracteristicas = parseStringList(row[1] ?? "");
+    const vantagens = parseStringList(row[2] ?? "");
     const economiaCards = [
       parseCard(row, 3),
       parseCard(row, 6),
@@ -170,7 +181,7 @@ function parseContentRows(rows: string[][]): Map<ContractType, ContentByContract
       parseCard(row, 21),
       parseCard(row, 24),
     ].filter((c): c is EconomiaCardContent => c !== null);
-    result.set(contractType, { economiaCards, indicadoresCards });
+    result.set(contractType, { economiaCards, indicadoresCards, caracteristicas, vantagens });
   }
   return result;
 }
@@ -213,8 +224,10 @@ export async function fetchSheetsData(): Promise<DashboardData> {
           npsGestores: [],
           scoreAtual: npsMap.get(slugify(empresa))?.scoreAtual ?? 0,
           economiaGerada: [],
-          economiaCards: [],     // filled below
-          indicadoresCards: [],  // filled below
+          economiaCards: [],            // filled below
+          indicadoresCards: [],         // filled below
+          contratoCaracteristicas: [],  // filled below
+          contratoVantagens: [],        // filled below
           indicadoresSucesso: [],
           oportunidadeExpansao: "",
         },
@@ -257,6 +270,8 @@ export async function fetchSheetsData(): Promise<DashboardData> {
     const content = contentMap.get(client.tipoContrato);
     client.economiaCards = content?.economiaCards ?? [];
     client.indicadoresCards = content?.indicadoresCards ?? [];
+    client.contratoCaracteristicas = content?.caracteristicas ?? [];
+    client.contratoVantagens = content?.vantagens ?? [];
 
     return client;
   });

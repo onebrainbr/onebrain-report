@@ -71,6 +71,8 @@ export interface ClientData {
   economiaGerada: EconomyItem[];
   economiaCards: EconomiaCardContent[];
   indicadoresCards: EconomiaCardContent[];
+  contratoCaracteristicas: string[];
+  contratoVantagens: string[];
   indicadoresSucesso: SuccessIndicator[];
   oportunidadeExpansao: string;
   observacoes?: string;
