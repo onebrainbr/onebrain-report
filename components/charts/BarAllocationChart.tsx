@@ -45,7 +45,7 @@ export function BarAllocationChart({ data }: BarAllocationChartProps) {
           allowDecimals={false}
         />
         <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
-        <Bar dataKey="qtdAlocados" radius={[4, 4, 0, 0]} fill="rgba(255,255,255,0.8)" />
+        <Bar dataKey="qtdAlocados" radius={[4, 4, 0, 0]} fill="rgba(255,255,255,0.45)" />
       </BarChart>
     </ResponsiveContainer>
   );
