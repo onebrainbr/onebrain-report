@@ -21,7 +21,7 @@ export function Header() {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-screen-xl mx-auto px-8 h-16 grid grid-cols-3 items-center">
+      <div className="max-w-screen-xl mx-auto px-8 h-20 grid grid-cols-3 items-center">
         {/* Left: logo */}
         <Link
           href="/"
