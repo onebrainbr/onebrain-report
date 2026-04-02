@@ -4,8 +4,13 @@ import { Footer } from "@/components/layout/Footer";
 import { ClientHeader } from "@/components/client/ClientHeader";
 import { GestorDataSection } from "@/components/client/GestorDataSection";
 import { getClientById, getAllClients } from "@/lib/data";
+import type { Metadata } from "next";
 
 export const revalidate = 300;
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 export async function generateStaticParams() {
   const clientes = await getAllClients();
