@@ -8,7 +8,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell,
 } from "recharts";
 import { MonthlyMetric } from "@/types";
 
@@ -29,8 +28,6 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export function BarAllocationChart({ data }: BarAllocationChartProps) {
-  const max = Math.max(...data.map((d) => d.qtdAlocados));
-
   return (
     <ResponsiveContainer width="100%" height={200}>
       <BarChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
@@ -48,14 +45,7 @@ export function BarAllocationChart({ data }: BarAllocationChartProps) {
           allowDecimals={false}
         />
         <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
-        <Bar dataKey="qtdAlocados" radius={[4, 4, 0, 0]}>
-          {data.map((entry, index) => (
-            <Cell
-              key={index}
-              fill={entry.qtdAlocados === max ? "rgba(255,255,255,0.8)" : "rgba(255,255,255,0.2)"}
-            />
-          ))}
-        </Bar>
+        <Bar dataKey="qtdAlocados" radius={[4, 4, 0, 0]} fill="rgba(255,255,255,0.8)" />
       </BarChart>
     </ResponsiveContainer>
   );
